@@ -1,36 +1,164 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🔐 Password Manager（パスワード管理アプリ）
 
-## Getting Started
+## 📖 概要
 
-First, run the development server:
+セキュリティを重視したシンプルなパスワード管理アプリケーションです。  
+1PasswordやBitwardenのような有料サービスと同等の機能を、自分で構築することで無料で利用できます。
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## 🎯 このアプリが解決する課題
+
+- **パスワードを忘れてしまう** → 安全に一元管理
+- **同じパスワードを使い回してしまう** → 強力なパスワード生成機能
+- **パスワードをメモ帳に保存している** → 暗号化された安全な保管
+- **有料サービスの月額費用（約500円/月）** → 自作で無料化
+
+---
+
+## ✨ 基本機能（コア機能）
+
+### 1. パスワード保存機能
+- サービス名（例：Gmail、Amazon、Netflix）
+- ユーザー名 / メールアドレス
+- パスワード
+- メモ（任意）
+
+### 2. 検索・コピー機能
+- サービス名で素早く検索
+- ワンクリックでパスワードをクリップボードにコピー
+- パスワードは非表示（マスク表示）がデフォルト
+
+### 3. パスワード生成機能
+- ランダムな強力パスワードを自動生成
+- 長さ、記号の有無などをカスタマイズ可能
+- 生成したパスワードをそのまま保存
+
+### 4. マスターパスワード保護
+- アプリ起動時にマスターパスワードで認証
+- 保存データはマスターパスワードで暗号化
+- マスターパスワードはサーバーに保存しない
+
+---
+
+## 🚀 発展機能（将来の拡張）
+
+| 機能 | 説明 |
+|------|------|
+| 🔍 パスワード強度チェック | 弱いパスワードを検出して警告 |
+| ⏰ 有効期限アラート | 定期的なパスワード変更をリマインド |
+| 📁 カテゴリ分類 | 仕事、プライベート、買い物などで整理 |
+| 🔄 エクスポート/インポート | データのバックアップと移行 |
+| 🌐 ブラウザ拡張機能 | 自動入力サポート |
+
+---
+
+## 🛠️ 技術スタック（予定）
+
+| レイヤー | 技術 |
+|----------|------|
+| フロントエンド | React / Next.js |
+| バックエンド | Supabase（認証・データベース） |
+| 暗号化 | Web Crypto API / AES-256 |
+| スタイリング | Tailwind CSS |
+| ホスティング | Vercel |
+
+---
+
+## 📐 画面構成
+
+```
+┌─────────────────────────────────────────┐
+│           🔐 ログイン画面                │
+│  ┌─────────────────────────────────┐    │
+│  │   マスターパスワードを入力      │    │
+│  │   [••••••••••••••]              │    │
+│  │   [ログイン]                    │    │
+│  └─────────────────────────────────┘    │
+└─────────────────────────────────────────┘
+              ↓ 認証成功
+┌─────────────────────────────────────────┐
+│           📋 パスワード一覧              │
+│  [🔍 検索...]        [+ 新規追加]       │
+│  ┌─────────────────────────────────┐    │
+│  │ 🌐 Gmail                        │    │
+│  │    user@gmail.com               │    │
+│  │    ••••••••  [👁️] [📋]          │    │
+│  ├─────────────────────────────────┤    │
+│  │ 🛒 Amazon                       │    │
+│  │    user@example.com             │    │
+│  │    ••••••••  [👁️] [📋]          │    │
+│  └─────────────────────────────────┘    │
+└─────────────────────────────────────────┘
+              ↓ 新規追加クリック
+┌─────────────────────────────────────────┐
+│           ➕ パスワード追加              │
+│  サービス名: [________________]         │
+│  ユーザー名: [________________]         │
+│  パスワード: [________] [🎲 生成]       │
+│  メモ:       [________________]         │
+│                                         │
+│        [キャンセル]  [保存]             │
+└─────────────────────────────────────────┘
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🔒 セキュリティ方針
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **ゼロ知識暗号化**: サーバーは暗号化されたデータのみ保存。復号キーはユーザーのマスターパスワードから生成
+2. **クライアントサイド暗号化**: 暗号化・復号はすべてブラウザ上で実行
+3. **マスターパスワード非保存**: マスターパスワード自体はどこにも保存しない
+4. **HTTPS通信**: すべての通信は暗号化
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 📅 開発ロードマップ
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Phase 1: MVP（最小実行可能製品）
+- [ ] マスターパスワード認証
+- [ ] パスワードの追加・編集・削除
+- [ ] パスワード一覧表示
+- [ ] 検索機能
+- [ ] クリップボードコピー
+- [ ] パスワード生成機能
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Phase 2: 機能拡張
+- [ ] パスワード強度チェック
+- [ ] カテゴリ分類
+- [ ] ダークモード対応
 
-## Deploy on Vercel
+### Phase 3: 高度な機能
+- [ ] 有効期限アラート
+- [ ] エクスポート/インポート
+- [ ] 二要素認証
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 💡 デモのポイント
+
+> 「1PasswordやBitwarden、月額500円払ってますよね？  
+> 今から7分で、同じようなものを作ります。**無料で。**」
+
+### アピールポイント
+- 🎯 **共感性**: 誰もがパスワード管理に困った経験がある
+- 💰 **経済性**: 有料サービスと同等機能を無料で
+- 🔐 **安全性**: 自分でデータを管理できる安心感
+- 📚 **学習性**: セキュリティとWeb開発の実践的な学び
+
+---
+
+## 📝 ライセンス
+
+MIT License
+
+---
+
+## 👤 作成者
+
+[あなたの名前]
+
+---
+
+*このREADMEは開発開始前の計画段階のものです。実装に伴い更新されます。*
+
