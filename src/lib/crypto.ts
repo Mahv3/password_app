@@ -50,10 +50,11 @@ async function deriveKey(
   );
   
   // PBKDF2でキーを導出
+  // 注意: saltをArrayBufferとして渡すことでTypeScriptの型エラーを回避
   const key = await crypto.subtle.deriveKey(
     {
       name: 'PBKDF2',
-      salt: usedSalt,
+      salt: usedSalt.buffer as ArrayBuffer,
       iterations: PBKDF2_ITERATIONS,
       hash: 'SHA-256',
     },
@@ -84,8 +85,9 @@ export async function encrypt(plaintext: string, password: string): Promise<stri
   const plaintextBuffer = encoder.encode(plaintext);
   
   // 暗号化
+  // 注意: ivをArrayBufferとして渡すことでTypeScriptの型エラーを回避
   const ciphertext = await crypto.subtle.encrypt(
-    { name: ALGORITHM, iv },
+    { name: ALGORITHM, iv: iv.buffer as ArrayBuffer },
     key,
     plaintextBuffer
   );
@@ -125,10 +127,11 @@ export async function decrypt(encryptedData: string, password: string): Promise<
   const { key } = await deriveKey(password, salt);
   
   // 復号
+  // 注意: ivとciphertextをArrayBufferとして渡すことでTypeScriptの型エラーを回避
   const plaintextBuffer = await crypto.subtle.decrypt(
-    { name: ALGORITHM, iv },
+    { name: ALGORITHM, iv: iv.buffer as ArrayBuffer },
     key,
-    ciphertext
+    ciphertext.buffer as ArrayBuffer
   );
   
   // デコード
@@ -162,4 +165,3 @@ export async function verifyPassword(password: string, verifier: string): Promis
     return false;
   }
 }
-
